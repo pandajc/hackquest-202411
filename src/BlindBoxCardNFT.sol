@@ -8,6 +8,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+
 import "./Constants.sol";
 
 error TotalSupplyLimit(uint256 id);
@@ -30,6 +31,7 @@ contract BlindBoxCardNFT is ERC1155, ERC1155Pausable, AccessControl, ERC1155Burn
         uint256[] memory _totalSupplyLimit,
         string memory _baseUri
     ) ERC1155(_baseUri) {
+        require(_minter != address(0), "invalid minter");
         require(bytes(_baseUri).length > 0, "invalid baseUri");
         require(_maxCardTokenId > 0 && _maxCardTokenId <= 10, "invalid maxCardTokenId");
         require(_fragmentCountPerCard > 0 && _fragmentCountPerCard < 10, "invalid fragmentCountPerCard");

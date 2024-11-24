@@ -8,12 +8,19 @@ error TokenIdOrderExists(uint256 tokenId);
 
 contract NFTMarket is ERC1155Holder {
     event Purchase(
-        address indexed buyer, address indexed nftAddr, uint256 indexed tokenId, uint256 price, uint256 amount
+        address indexed buyer, address indexed nftAddr, uint256 indexed orderId, uint256 price, uint256 amount
     );
-    event List(address indexed seller, address indexed nftAddr, uint256 indexed tokenId, uint256 price, uint256 amount);
-    event Revoke(address indexed seller, address indexed nftAddr, uint256 indexed tokenId);
-    event UpdatePrice(address indexed seller, address indexed nftAddr, uint256 indexed tokenId, uint256 newPrice);
-    event UpdateAmount(address indexed seller, address indexed nftAddr, uint256 indexed tokenId, uint256 newAmount);
+    event List(
+        address indexed seller,
+        address indexed nftAddr,
+        uint256 indexed orderId,
+        uint256 price,
+        uint256 amount,
+        uint256 tokenId
+    );
+    event Revoke(address indexed seller, address indexed nftAddr, uint256 indexed orderId);
+    event UpdatePrice(address indexed seller, address indexed nftAddr, uint256 indexed orderId, uint256 newPrice);
+    event UpdateAmount(address indexed seller, address indexed nftAddr, uint256 indexed orderId, uint256 newAmount);
 
     struct Order {
         address token;
@@ -48,7 +55,7 @@ contract NFTMarket is ERC1155Holder {
         order.amount = _amount;
         order.price = _price;
         ownerTokenIdToOrderId[_nftAddr][msg.sender][_tokenId] = orderId;
-        emit List(msg.sender, _nftAddr, _tokenId, _price, _amount);
+        emit List(msg.sender, _nftAddr, orderId, _price, _amount, _tokenId);
         return orderId;
     }
 
@@ -70,7 +77,7 @@ contract NFTMarket is ERC1155Holder {
             payable(msg.sender).transfer(msg.value - totalValue);
         }
         order.amount -= _amount;
-        emit Purchase(msg.sender, order.token, order.tokenId, order.price, _amount);
+        emit Purchase(msg.sender, order.token, _orderId, order.price, _amount);
         if (order.amount == 0) {
             delete orders[_orderId];
             delete ownerTokenIdToOrderId[order.token][order.owner][order.tokenId];
@@ -89,7 +96,7 @@ contract NFTMarket is ERC1155Holder {
         uint256 tokenId = order.tokenId;
         require(nft.balanceOf(address(this), tokenId) > 0, "invalid order");
         nft.safeTransferFrom(address(this), msg.sender, tokenId, order.amount, "");
-        emit Revoke(msg.sender, order.token, tokenId);
+        emit Revoke(msg.sender, order.token, _orderId);
         delete orders[_orderId];
         delete ownerTokenIdToOrderId[order.token][order.owner][tokenId];
     }
@@ -104,7 +111,7 @@ contract NFTMarket is ERC1155Holder {
         IERC1155 nft = IERC1155(nftAddr);
         require(nft.balanceOf(address(this), tokenId) > 0, "invalid order");
         order.price = _newPrice;
-        emit UpdatePrice(msg.sender, nftAddr, tokenId, _newPrice);
+        emit UpdatePrice(msg.sender, nftAddr, _orderId, _newPrice);
     }
 
     function updateAmount(uint256 _orderId, uint256 _amount) public {
@@ -122,7 +129,7 @@ contract NFTMarket is ERC1155Holder {
             nft.safeTransferFrom(address(this), msg.sender, tokenId, order.amount - _amount, "");
         }
         order.amount = _amount;
-        emit UpdateAmount(msg.sender, nftAddr, tokenId, _amount);
+        emit UpdateAmount(msg.sender, nftAddr, _orderId, _amount);
     }
 
     function get(uint256 _tokenId) public view returns (Order memory) {

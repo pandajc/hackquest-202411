@@ -27,7 +27,7 @@ contract NFTMarketTest is Test, Helper {
         nft.mint(msg.sender, tokenId, mintAmount, "");
         nft.setApprovalForAll(address(market), true);
         vm.expectEmit(true, true, true, true);
-        emit NFTMarket.List(msg.sender, nftAddr, tokenId, price, amount);
+        emit NFTMarket.List(msg.sender, nftAddr, 1, price, amount, tokenId);
         orderId = market.list(nftAddr, tokenId, price, amount);
         console.log("return orderId: ", orderId);
     }
@@ -57,7 +57,7 @@ contract NFTMarketTest is Test, Helper {
         vm.startPrank(msg.sender);
         uint256 newPrice = 600;
         vm.expectEmit(true, true, true, true);
-        emit NFTMarket.UpdatePrice(msg.sender, nftAddr, tokenId, newPrice);
+        emit NFTMarket.UpdatePrice(msg.sender, nftAddr, orderId, newPrice);
         market.updatePrice(orderId, newPrice);
         NFTMarket.Order memory o = market.get(orderId);
         assertEq(o.price, newPrice);
@@ -82,7 +82,7 @@ contract NFTMarketTest is Test, Helper {
     function test_revoke() public {
         vm.startPrank(msg.sender);
         vm.expectEmit(true, true, true, false);
-        emit NFTMarket.Revoke(msg.sender, nftAddr, tokenId);
+        emit NFTMarket.Revoke(msg.sender, nftAddr, orderId);
         market.revoke(orderId);
         NFTMarket.Order memory o = market.get(orderId);
         assertEq(o.amount, 0);
@@ -103,7 +103,7 @@ contract NFTMarketTest is Test, Helper {
         uint256 purchaseAmount = 1;
         address bob = _useBobAddr();
         vm.expectEmit(true, true, true, true);
-        emit NFTMarket.Purchase(bob, nftAddr, tokenId, price, purchaseAmount);
+        emit NFTMarket.Purchase(bob, nftAddr, orderId, price, purchaseAmount);
         market.purchase{value: 10000}(orderId, purchaseAmount);
         NFTMarket.Order memory o = market.get(orderId);
         assertEq(o.amount, amount - purchaseAmount);
@@ -150,7 +150,7 @@ contract NFTMarketTest is Test, Helper {
         uint256 newAmount = amount - 1;
         vm.startPrank(msg.sender);
         vm.expectEmit(true, true, true, true);
-        emit NFTMarket.UpdateAmount(msg.sender, nftAddr, tokenId, newAmount);
+        emit NFTMarket.UpdateAmount(msg.sender, nftAddr, orderId, newAmount);
         uint256 ownerOldBalance = nft.balanceOf(msg.sender, tokenId);
         uint256 oldAmount = market.get(orderId).amount;
         market.updateAmount(orderId, newAmount);
@@ -163,7 +163,7 @@ contract NFTMarketTest is Test, Helper {
         uint256 newAmount = amount + 1;
         vm.startPrank(msg.sender);
         vm.expectEmit(true, true, true, true);
-        emit NFTMarket.UpdateAmount(msg.sender, nftAddr, tokenId, newAmount);
+        emit NFTMarket.UpdateAmount(msg.sender, nftAddr, orderId, newAmount);
         uint256 ownerOldBalance = nft.balanceOf(msg.sender, tokenId);
         uint256 oldAmount = market.get(orderId).amount;
         market.updateAmount(orderId, newAmount);
