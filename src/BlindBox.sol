@@ -29,7 +29,7 @@ contract BlindBox is Ownable {
         payable(msg.sender).transfer(_amount);
     }
 
-    function openBox(address _token, uint256 _count) external payable {
+    function openBox(address _token, uint256 _count) external payable returns (uint256[] memory) {
         require(_count > 0 && _count <= 10, "invalid count");
         uint256 price = tokenToPrice[_token];
         require(price > 0, "invalid token");
@@ -49,6 +49,7 @@ contract BlindBox is Ownable {
         }
         nft.mintBatch(msg.sender, tokenIds, amounts, "");
         emit BoxOpend(_token, msg.sender, tokenIds);
+        return tokenIds;
     }
 
     function _selectTokenId(BlindBoxCardNFT nft, uint256 _num) private view returns (uint256) {
