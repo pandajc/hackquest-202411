@@ -16,6 +16,8 @@ contract BlindBoxCardNFTScript is Script {
 
     function setUp() public {}
 
+    function run() public {}
+
     function run(address _minter) public {
         deployBlindBoxCardNFT(_minter);
     }

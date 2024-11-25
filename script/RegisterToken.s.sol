@@ -9,6 +9,8 @@ import {NFTMarket} from "../src/NFTMarket.sol";
 contract RegisterTokenScript is Script {
     function setUp() public {}
 
+    function run() public {}
+
     function run(address payable _box, address _nft) public {
         uint256 price = 0.0123 ether;
         registerToken(_box, _nft, price);
