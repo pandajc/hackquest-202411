@@ -1,66 +1,18 @@
-## Foundry
+Contracts of Project Blind Box
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+Contract Address(Deployed on Telos EVM Testnet):
 
-Foundry consists of:
+BlindBox: 0x48a2b70b834085A1C76CFF1523A94a072e161fe3
+https://testnet.teloscan.io/address/0x48a2b70b834085A1C76CFF1523A94a072e161fe3?network=telos-evm-testnet
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+NFTMarket: 0xD60d331B1999824C84A0A702D07368Fde493dF94
+https://testnet.teloscan.io/address/0xD60d331B1999824C84A0A702D07368Fde493dF94?network=telos-evm-testnet
 
-## Documentation
+BlindBoxCardNFT: 0xf3981B00662D7C43C805Ce0ed65B521893B9C3e6
+https://testnet.teloscan.io/address/0xf3981B00662D7C43C805Ce0ed65B521893B9C3e6?network=telos-evm-testnet
 
-https://book.getfoundry.sh/
+Fontend Project:
+https://github.com/pandajc/blind-box-frontend
 
-## Usage
-
-### Build
-
-```shell
-$ forge build
-```
-
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+Backend Project:
+https://github.com/pandajc/blind-box-svr
